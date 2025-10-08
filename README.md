@@ -10,5 +10,4 @@ Each jet is thus mapped to a sequence of discrete tokens $\mathbf{J}=({\tt[start
 ## Model Architecture 🤗 
 The autoregressive model implementation in `models.py` is based on the GPT2 architecture from *Transformers* library froom *Hugging Face* 🤗 . GPT2 is a transformer-based language model that has been adapted here for processing jet physics data.
 
-## Training
-We train the generative model via next-token-prediction. Including the stop token allows for the model to learn the particle multiplicity distributions.  
+We train the generative model via next-token-prediction. Including the stop token allows for the model to learn the particle multiplicity distributions. During inference we generate new jet sequences from the start token. 
