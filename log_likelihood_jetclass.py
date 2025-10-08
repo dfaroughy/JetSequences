@@ -23,7 +23,7 @@ parser.add_argument("--checkpoint", "-ckpt", type=str, default='best.ckpt')
 parser.add_argument("--eval_data_type", "-eval", type=str, default='None')
 parser.add_argument("--eval_data_path", "-eval_pth", type=str, default=None)
 parser.add_argument("--num_jets", "-n", type=int, default=10000)
-parser.add_argument("--batch_size", "-bs", type=int, default=128)
+parser.add_argument("--batch_size", "-bs", type=int, default=32)
 
 config = parser.parse_args()
 
@@ -32,11 +32,13 @@ config = parser.parse_args()
 model = JetGPT2Model.load_from_checkpoint(f"{config.dir}/{config.project_name}/{config.experiment_id}/checkpoints/{config.checkpoint}", map_location="cpu",)
 model.predict_type = config.predict_type
 
-seq = torch.tensor(np.load(f"{config.dir}/{config.project_name}/{config.eval_data_path}"))
+# seq = torch.tensor(np.load(f"{config.dir}/{config.eval_data_path}"))
+seq = torch.tensor(np.load(config.eval_data_path))
+
 dataset = JetSequenceDataset(input_ids=seq, 
-                            #  num_jets_min=11_990_000,
+                            #  num_jets_min=10_000_000,
                              num_jets=config.num_jets, 
-                             max_seq_length=model.max_seq_length
+                             max_seq_length=40
                              )
                              
 dataloader = DataLoader(dataset, batch_size=config.batch_size, shuffle=False)
@@ -45,7 +47,8 @@ callback = LogProbsCallback(config=config)
 #...compute log probs
 
 comp_log_probs = L.Trainer(accelerator="gpu", 
-                          devices='auto', 
+                          # devices=[0], 
+                          devices='auto',
                           strategy='ddp', 
                           num_nodes=config.num_nodes, 
                           callbacks=[callback])

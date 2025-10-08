@@ -6,7 +6,6 @@ from torch.utils.data import DataLoader
 from argparse import ArgumentParser
 
 from models import JetGPT2Model
-from foundation_model import JetGPT2DoubleHeads
 from datamodule_jetclass import JetSequenceDataset
 
 ##########################################################################
@@ -28,7 +27,10 @@ parser.add_argument("--tags", type=str, nargs='*')
 
 parser.add_argument("--jet_type", "-type", type=str, default='ZJetsToNuNu')
 parser.add_argument("--max_seq_length", "-len", type=int, default=40)
-parser.add_argument("--nBins", "-bins", type=int, nargs=3)
+parser.add_argument("--num_bins", "-bins", type=int, nargs=3, default=[31, 21, 21])
+parser.add_argument("--log_pt_range", "-pt", type=float, nargs=2, default=[-0.7602971186041831, 6.906254768371582])
+parser.add_argument("--eta_range", "-eta", type=float, nargs=2, default=[-0.8, 0.8])
+parser.add_argument("--phi_range", "-phi", type=float, nargs=2, default=[-0.8, 0.8])
 parser.add_argument("--batch_size", "-bs", type=int, default=128)
 
 parser.add_argument("--n_emb", type=int, default=256)
@@ -58,12 +60,12 @@ logger = CometLogger(
 
 logger.experiment.add_tags(config.tags)
 
-train_dataset = JetSequenceDataset(filepath=f"{config.data_path}/train_12M_EPiC_FM_binned/{config.jet_type}_EPiC_FM_bins403030.h5", 
+train_dataset = JetSequenceDataset(filepath=f"{config.data_path}/train_12M_EPiC_FM_binned_30_20_20/{config.jet_type}_EPiC_FM_bins302020.h5", 
                                   max_seq_length=config.max_seq_length,
                                   num_jets_min=0,
                                   num_jets=10_000_000,)
 
-val_dataset = JetSequenceDataset(filepath=f"{config.data_path}/train_12M_EPiC_FM_binned/{config.jet_type}_EPiC_FM_bins403030.h5", 
+val_dataset = JetSequenceDataset(filepath=f"{config.data_path}/train_12M_EPiC_FM_binned_30_20_20/{config.jet_type}_EPiC_FM_bins302020.h5", 
                                   max_seq_length=config.max_seq_length,
                                   num_jets_min=10_000_000,
                                   num_jets=10_500_000,)
@@ -105,6 +107,11 @@ trainer = L.Trainer(
 if config.experiment_id is None:
 
     model = JetGPT2Model(
+                max_seq_length=config.max_seq_length,
+                num_bins=config.num_bins,
+                logpt_range=config.log_pt_range,
+                eta_range=config.eta_range,
+                phi_range=config.phi_range,
                 n_embd=config.n_emb,
                 n_inner=config.n_inner,
                 n_layer=config.n_layer,

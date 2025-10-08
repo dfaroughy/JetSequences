@@ -1,11 +1,9 @@
 import numpy as np
 import torch
-import torch.nn as nn
 import pytorch_lightning as L
 from torch.optim.lr_scheduler import CosineAnnealingLR
-from torch.utils.data import DataLoader, TensorDataset
 import torch.nn.functional as F
-from scipy.special import gammaln, gamma, factorial
+from scipy.special import factorial
 
 from transformers import GPT2LMHeadModel, GPT2Config
 from datamodule_jetclass import JetSequence
@@ -156,11 +154,10 @@ class JetGPT2Model(L.LightningModule):
 
         elif self.predict_type == 'logp':
 
-            preds = self.compute_log_probs(batch, include_symmetry_terms=True) 
+            preds = self.compute_log_probs(batch, symmetry_correction_terms=True) 
 
         return preds.detach().cpu()
  
-
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
 
@@ -223,7 +220,6 @@ class JetGPT2Model(L.LightningModule):
             logp -= torch.tensor( N * np.log(self.dvol), device=logp.device, dtype=logp.dtype) # - N * log(dvol) volume factor
 
         return logp
-
 
     @torch.no_grad()
     def per_token_preds(self, seq, device=None):
