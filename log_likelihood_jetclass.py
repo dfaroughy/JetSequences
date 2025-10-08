@@ -3,7 +3,7 @@ import torch
 import pytorch_lightning as L
 from argparse import ArgumentParser
 
-from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import DataLoader
 from models import JetGPT2Model
 from utils import LogProbsCallback
 from datamodule_jetclass import JetSequenceDataset

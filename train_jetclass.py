@@ -8,6 +8,12 @@ from argparse import ArgumentParser
 from models import JetGPT2Model
 from datamodule_jetclass import JetSequenceDataset
 
+
+"""
+training script for the JetGPT2Model on JetClass data
+
+"""
+
 ##########################################################################
 parser = ArgumentParser()
 parser.add_argument("--num_nodes", "-N", type=int, default=1)
