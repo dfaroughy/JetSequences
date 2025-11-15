@@ -1,7 +1,6 @@
 
-import numpy as np
-import pandas as pd
 import torch
+import numpy as np
 import os
 from pathlib import Path
 import awkward as ak
@@ -16,7 +15,7 @@ from pytorch_lightning.callbacks import Callback
 from lightning.pytorch.utilities import rank_zero_only
 from sklearn.metrics import roc_curve, auc
 
-from datamodule_jetclass import JetSequence
+from datamodule import JetSequence
 
 vector.register_awkward()
 

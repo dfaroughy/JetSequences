@@ -1,12 +1,12 @@
-import numpy as np
 import torch
+import numpy as np
 import pytorch_lightning as L
 from argparse import ArgumentParser
 
 from torch.utils.data import DataLoader
 from models import JetGPT2Model
 from utils import LogProbsCallback
-from datamodule_jetclass import JetSequenceDataset
+from datamodule import JetSequenceDataset
 
 
 ###############################################################################

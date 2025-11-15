@@ -1,10 +1,8 @@
-import numpy as np
 import torch
-from scipy.integrate import quad
+import numpy as np
 from scipy.special import factorial
 from torch.utils.data import Dataset
 import h5py
-import pandas as pd
 
 
 class JetSequence:

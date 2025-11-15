@@ -1,4 +1,3 @@
-import numpy as np
 import torch
 import pytorch_lightning as L
 from argparse import ArgumentParser
