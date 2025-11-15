@@ -9,6 +9,7 @@ experiments/
 plots/
 data/
 old/
+.vscode/
 
 scripts/
 *.py[cod]
