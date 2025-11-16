@@ -255,6 +255,7 @@ class LogProbsCallback(Callback):
         plt.tight_layout()
         plt.savefig(path, dpi=500, bbox_inches='tight')
 
+
 class JetSubstructure:
     def __init__(self, constituents, R=0.8, beta=1.0, use_wta_scheme=True):
 
@@ -355,7 +356,6 @@ class JetSubstructure:
         return ak.sum(pt_i * min_delta_r, axis=1) / self.d0
 
 
-
 def binnify(jets, 
             logpt_range=(-0.7602971186041831, 6.906254768371582),
             eta_range=(-0.8, 0.8),
@@ -449,6 +449,25 @@ def jets_HighLevelFeats(sample):
     jet_mass = np.sqrt(np.maximum(0, jet_4mom[..., 3]**2 - (jet_4mom[..., 0]**2 + jet_4mom[..., 1]**2 + jet_4mom[..., 2]**2)))
 
     return np.stack([jet_pt, jet_eta, jet_phi, jet_mass], axis=-1)
+
+
+def ROC(LLR_bckg, LLR_sig, label):
+      """
+      Compute ROC curve and AUC
+      """
+      scores = np.concatenate([LLR_sig, LLR_bckg])
+      labels = np.concatenate([np.ones_like(LLR_sig), np.zeros_like(LLR_bckg)])
+
+      fpr, tpr, thresholds = roc_curve(labels, scores)
+      roc_auc = auc(fpr, tpr)
+      R30 = 1/fpr[np.searchsorted(tpr, 0.30)]
+      R50 = 1/fpr[np.searchsorted(tpr, 0.50)]
+
+      print("AUC =",roc_auc)
+      print("R30 =",R30)
+      print("R50 =", R50)
+
+      plt.plot(tpr, 1 / fpr, '-', label=f"{label}, " + r"($R_{50}=$"+f"{R50:.1f})", lw=1.5)
 
 
 def plot_kin_with_ratio(test_disc, gen, aachen=None, test_cont=None, path='results_plot.png', jet='jetclass'):
