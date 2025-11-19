@@ -1,4 +1,4 @@
-# Jet sequences generation with GPT2
+# Jet generation with GPT2
 
 This project uses the tokenized JetClass dataset, where jet constituent information is processed through discretization and tokenization. We order the constituents by descending $p_T$ and voxelize the 3D feature space as follows:
 - Log transverse momentum: $\log p_T$ with $N_{p_T}=40$ bins.
